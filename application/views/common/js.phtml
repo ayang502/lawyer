@@ -1,0 +1,23 @@
+    <script src="/public/js/jquery-1.8.3.min.js"></script>
+    <script src="/public/js/bootstrap.min.js"></script>
+    <script class="include" type="text/javascript" src="/public/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="/public/js/jquery.scrollTo.min.js"></script>
+    <script src="/public/js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="/public/js/jquery.sparkline.js"></script>
+    <!--common script for all pages-->
+    <script src="/public/js/common-scripts.js"></script>
+    <script type="text/javascript" src="/public/js/gritter/js/jquery.gritter.js"></script>
+    <script type="text/javascript" src="/public/js/gritter-conf.js"></script>
+    <script type="text/javascript">
+        var c = "<?php echo $c?>";
+        var a = "<?php echo $a?>";
+        if (c != "") {
+            $(".sub-menu #" + c).addClass("active");
+        }
+        if (c = 'cases' && a == 'create') {
+            a = 'list'
+        }
+        if (a != "") {
+            $(".sub #" + a).addClass("active");
+        }
+    </script>

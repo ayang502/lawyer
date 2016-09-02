@@ -1,0 +1,92 @@
+<!--sidebar start-->
+<aside>
+    <div id="sidebar"  class="nav-collapse ">
+        <ul class="sidebar-menu" id="nav-accordion">
+            <p class="centered"><a href="profile.html"><img src="/public/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
+            <h5 class="centered"><?php echo $currentUser['name']?></h5>
+            <li class="mt">
+                <a href="/" id='index'>
+                    <i class="fa fa-dashboard"></i>
+                    <span> 首页</span>
+                </a>
+            </li>
+            <?php if (isset($currentMenu[20])) {?>
+            <li class="sub-menu">
+                <a href="javascript:;" id="cases" >
+                    <i class="fa fa-desktop"></i>
+                    <span> 案件管理</span>
+                </a>
+                <ul class="sub">
+                <?php if (isset($currentMenu[2001])) {?>
+                    <li id='list'><a href="/cases/list"> 案件列表</a></li>
+                <?php }?>
+                <?php if (isset($currentMenu[2003])) {?>
+                    <li id="ctype"><a href="/cases/ctype"> 案件类型</a></li>
+                <?php }?>
+                <?php if (isset($currentMenu[2004])) {?>
+                    <li id="flag"><a href="/cases/flag"> 案件阶段</a></li>
+                <?php }?>
+                </ul>
+            </li>
+            <?php }?>
+            <?php if (isset($currentMenu[40])) {?>
+            <li class="sub-menu">
+                <a href="javascript:;" id="setting">
+                    <i class="fa fa-cogs"></i>
+                    <span> 个人设置</span>
+                </a>
+                <ul class="sub">
+                    <?php if (isset($currentMenu[4001])) {?>
+                    <li id="profile"><a href="/setting/profile">  个人信息</a></li>
+                    <?php }?>
+                    <?php if (isset($currentMenu[4002])) {?>
+                    <li id="repass"><a href="/setting/repass"> 修改密码</a></li>
+                    <?php }?>
+                </ul>
+            </li>
+            <?php }?>
+            <?php if (isset($currentMenu[30])) {?>
+            <li class="sub-menu">
+                <a href="javascript:;" id="message">
+                    <i class="fa fa-book"></i>
+                    <span> 消息提醒</span>
+                </a>
+                <ul class="sub">
+                    <?php if (isset($currentMenu[3001])) {?>
+                    <li id="todo"><a href="/message/todo"> 日历</a></li>
+                    <?php }?>
+                    <?php if (isset($currentMenu[3002])) {?>
+                    <li id="msgbox"><a href="/message/msgbox"> 收件箱</a></li>
+                    <?php }?>
+                    <?php if (isset($currentMenu[3003])) {?>
+                    <li id="casemsg"><a href="/message/casesmsg"> 案件消息</a></li>
+                    <?php }?>
+                </ul>
+            </li>
+            <?php }?>
+            <?php if (isset($currentMenu[50])) {?>
+            <li class="sub-menu">
+                <a href="javascript:;" id="sys">
+                    <i class="fa fa-tasks"></i>
+                    <span> 系统管理</span>
+                </a>
+                <ul class="sub">
+                    <?php if (isset($currentMenu[5001])) {?>
+                    <li id="user"><a href="/sys/user"> 用户管理</a></li>
+                    <?php }?>
+                    <?php if (isset($currentMenu[5002])) {?>
+                    <li id="role"><a href="/sys/role"> 角色管理</a></li>
+                    <?php }?>
+
+                    <?php if (isset($currentMenu[5004])) {?>
+                    <li id="proclamation"><a href="/sys/proclamation"> 系统公告</a></li>
+                    <?php }?>
+                    <?php if (isset($currentMenu[5005])) {?>
+                    <li id="role"><a href="/sys/duties"> 职位管理</a></li>
+                    <?php }?>
+                </ul>
+            </li>
+            <?php }?>
+        </ul>
+    </div>
+</aside>

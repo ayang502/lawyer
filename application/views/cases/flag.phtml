@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+   <?php require $viewPath . "common/head.phtml"?>
+<body>
+<section id="container" >
+    <?php require $viewPath . "common/nav.phtml"?>
+    <?php require $viewPath . "common/sidebar.phtml"?>
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row mt">
+                <div class="col-md-12">
+                    <div class="content-panel">
+                        <div class="clearfix"></div>
+                            <h4><i class="fa fa-angle-right"></i> 阶段列表
+                        <?php if (isset($currentMenu[200402])) {?>
+                        <button data-toggle="modal" href="#myModal" class="btn btn-primary pull-right nav-right">  添加 </button>
+                        <?php }?>
+                        </h4>
+                        <hr>
+                        <table class="table table-striped table-advance table-hover">
+                        <thead>
+                            <tr>
+                                <th><i class="fa fa-flag"></i> 名称</th>
+                                <th><i class="fa fa-flag"></i> 阶段产出</th>
+                                <th><i class="fa fa-flag"></i> 状态</th>
+                                <th><i class="fa fa-user"></i> 添加人</th>
+                                <th><i class="fa fa-clock-o"></i> 添加时间</th>
+                                <th><i class="fa fa-cogs"> 操作</i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($result as $k=>$v) {$datas = json_encode($v);?>
+                              <tr>
+                                <td><?php echo $v['name'];?></td>
+                                <td><?php echo join('<br>', Util_Tools::getFiles($v['files']));?></td>
+                                <td><?php echo $operators[$v['operator']]['name'];?></td>
+                                <td><?php echo Util_Tools::getStatus('caseflag', $v['status']);?></td>
+                                <td><?php echo $v['created'];?></td>
+                                <td>
+                                    <?php if (isset($currentMenu[200402])) {?>
+                                    <button class="btn btn-primary btn-xs modifyButton" datas='<?php echo $datas?>' href="#modifyModal" title="修改"><i class="fa fa-pencil"></i></button>
+                                    <?php }?>
+                                    <?php if (isset($currentMenu[200404]) && $v['status'] != -1) {?>
+                                    <button class="btn btn-danger btn-xs deleteButton" data-id='<?php echo $v['id']?>' href="#deleteModal" title="删除"><i class="fa fa-trash-o"></i></button>
+                                    <?php }?>
+                                    <?php if (isset($currentMenu[500404]) && $v['status'] == -1) {?>
+                                    <button class="btn btn-info btn-xs magicButton" data-id='<?php echo $v['id']?>' href="#magicModal" title="恢复"><i class="fa fa-magic"></i></button>
+                                    <?php }?>
+                                </td>
+                              </tr>
+                            <?php }?>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+    <?php require $viewPath . "common/footer.phtml"?>
+</section>
+<!-- modal -->
+<?php require $viewPath . "common/js.phtml"?>
+<!-- Modal -->
+<?php if (isset($currentMenu[200402])) {?>
+<form class="form-horizontal style-form" id="form" onSubmit="return false;">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">  添加案件阶段</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <strong> 警告！</strong><span class="showMsg"></span>
+                    </div>
+                    <input type="text" name="name" placeholder="阶段名称" autocomplete="off" class="placeholder-no-fix form-control">
+                    <hr>
+                    <div id="filesDiv">
+                        <div class="fromm-inline">
+                            <div>
+                            <input type="text" name="files[]" placeholder="产出文件名称" autocomplete="off" class="placeholder-no-fix pull-left form-control" style="width:70%">
+                            </div>
+                            <div class="pull-right">
+                            <button type="button" class="btn btn-theme02 minusButton"><i class="fa fa-minus"></i> 删除</button>
+                            </div>
+                            <div class="btn-group pull-right nav-right">
+                                <input type="hidden" name="need[]" value='2'>
+                                <button type="button" class="btn btn-theme04" id="need-btn">选填</button>
+                                <button type="button" class="btn btn-theme04 dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a class="a-need" data-id="1" href="#bottom"> 必填</a></li>
+                                    <li><a class="a-need" data-id="2" href="#bottom"> 选填</a></li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-theme02 addButton"><i class="fa fa-plus"></i> 增加</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default">关闭</button>
+                    <button class="btn btn-theme" id="submitForm">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<?php }?>
+<?php if (isset($currentMenu[200403])) {?>
+<form class="form-horizontal style-form" id="modifyForm" onSubmit="return false;">
+    <div aria-hidden="true" aria-labelledby="modifyModalLabel" role="dialog" tabindex="-1" id="modifyModal" class="modal fade">
+        <input name="Flagid" type="hidden">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">  修改案件阶段</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <strong> 警告！</strong><span class="showMsg"></span>
+                    </div>
+                    <input type="text" name="name" placeholder="阶段名称" autocomplete="off" class="placeholder-no-fix form-control">
+                    <hr>
+                    <div id="filesDiv">
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-theme02 addButton"><i class="fa fa-plus"></i> 增加</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default">关闭</button>
+                    <button class="btn btn-theme" id="modifySubmitForm">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<?php }?>
+<?php if (isset($currentMenu[200404])) {?>
+<form class="form-horizontal style-form" id="deleteForm" onSubmit="return false;">
+<div aria-hidden="true" aria-labelledby="deleteModalLabel" role="dialog" tabindex="-1" id="deleteModal" class="modal fade">
+    <input type="hidden" name="id">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">  删除阶段 </h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <strong> 警告： </strong><span class="showMsg"></span>
+                </div>
+                <div class="center">
+                    确认要删除该阶段吗？
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default">取消</button>
+                <button class="btn btn-theme" id="submitDeleteForm">确认</button>
+           </div>
+        </div>
+    </div>
+</div>
+</form>
+<?php }?>
+<?php if (isset($currentMenu[200404])) {?>
+<form class="form-horizontal style-form" id="magicForm" onSubmit="return false;">
+    <input type="hidden" name='Flagid'>
+    <input type="hidden" name='status' value='1'>
+    <div aria-hidden="true" aria-labelledby="modifyModalLabel" role="dialog" tabindex="-1" id="magicModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">  恢复阶段状态</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <strong> 警告！</strong><span class="showMsg"></span>
+                    </div>
+                    <div>确定恢复该阶段吗?</div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default">关闭</button>
+                    <button class="btn btn-theme" id="magicSubmitForm">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<?php }?>
+
+
+<script type="text/javascript" src="/public/js/base.js"></script>
+<script>
+function onComplete(result){
+    if (result.status != 200) {
+        $('.alert-warning').show();
+        $('.showMsg').html(result.msg);
+    } else {
+        location.href = "/cases/flag";
+    }
+}
+$(document).ready(function(){
+    $('#submitForm').click(function(){
+        ajaxPost('/cases/flag/act/create', $("#form").serialize());
+    });
+    $('#myModal .a-need').live("click", function(){
+        var obj = $(this).parent().parent().parent();
+        var val = $(this).html();
+        var id  =  $(this).attr('data-id');
+        obj.find('button[id="need-btn"]').html(val)
+        obj.find('input[name="need[]"]').val(id)
+    });
+    $('#myModal .minusButton').live("click", function(){
+        var obj = $(this).parent().parent();
+        obj.remove();
+    });
+
+    $('#myModal .addButton').click(function(){
+        var html = '<div class="form-inline">'+
+                        '<div><input type="text" name="files[]" placeholder="产出文件名称" autocomplete="off" class="form-control placeholder-no-fix pull-left" style="width:70%"></div>' +
+                        '<div class="pull-right"><button type="button" class="btn btn-theme02 minusButton"><i class="fa fa-minus"></i> 删除</button></div>' +
+                        '<div class="btn-group pull-right nav-right">'+
+                            '<input type="hidden" name="need[]" value="2">'+
+                            '<button type="button" class="btn btn-theme04" id="need-btn">选填</button>'+
+                            '<button type="button" class="btn btn-theme04 dropdown-toggle" data-toggle="dropdown">'+
+                                '<span class="caret"></span>'+
+                                '<span class="sr-only"></span>'+
+                            '</button>'+
+                            '<ul class="dropdown-menu" role="menu">'+
+                                '<li><a class="a-need" data-id="1" href="#bottom"> 必填</a></li>'+
+                                '<li><a class="a-need" data-id="2" href="#bottom"> 选填</a></li>'+
+                            '</ul>'+
+                        '</div>'+
+                    '</div>';
+        $("#myModal #filesDiv").append(html);
+    })
+
+    $('#modifyModal .addButton').click(function(){
+        var html = '<div class="form-inline">'+
+                        '<div><input type="text" name="files[]" placeholder="产出文件名称" autocomplete="off" class="form-control placeholder-no-fix pull-left" style="width:70%"></div>' +
+                        '<div class="pull-right"><button type="button" class="btn btn-theme02 minusButton"><i class="fa fa-minus"></i> 删除</button></div>' +
+                        '<div class="btn-group pull-right nav-right">'+
+                            '<input type="hidden" name="need[]" value="2">'+
+                            '<button type="button" class="btn btn-theme04" id="need-btn">选填</button>'+
+                            '<button type="button" class="btn btn-theme04 dropdown-toggle" data-toggle="dropdown">'+
+                                '<span class="caret"></span>'+
+                                '<span class="sr-only"></span>'+
+                            '</button>'+
+                            '<ul class="dropdown-menu" role="menu">'+
+                                '<li><a class="a-need" data-id="1" href="#bottom"> 必填</a></li>'+
+                                '<li><a class="a-need" data-id="2" href="#bottom"> 选填</a></li>'+
+                            '</ul>'+
+                        '</div>'+
+                    '</div>';
+        $("#modifyModal #filesDiv").append(html);
+    })
+
+    $('#modifySubmitForm').click(function(){
+        ajaxPost('/cases/flag/act/modify', $("#modifyForm").serialize());
+    })
+
+    $('#modifyModal .a-need').live("click", function(){
+        var obj = $(this).parent().parent().parent();
+        var val = $(this).html();
+        var id  =  $(this).attr('data-id');
+        obj.find('button[id="need-btn"]').html(val)
+        obj.find('input[name="need[]"]').val(id)
+    });
+
+    $('#modifyModal .minusButton').live("click", function(){
+        var obj = $(this).parent().parent();
+        obj.remove();
+    });
+
+    $(".modifyButton").click(function(){
+        var datas = $.parseJSON($(this).attr('datas'));
+        var files = datas.files;
+        $("#modifyModal input[name='Flagid']").val(datas.id);
+        $("#modifyModal input[name='name']").val(datas.name);
+        if (files != null) {
+            for (var i in files) {
+                var name = files[i].name;
+                var need = files[i].need;
+                if (need == 1) {
+                    need_zh = '必填'
+                } else {
+                    need_zh = '选填'
+                }
+                var html = '<div class="form-inline"><div>'+
+                    '<input type="text" value="' + name +
+                    '" name="files[]" placeholder="产出文件名称" autocomplete="off" class="form-control placeholder-no-fix pull-left" style="width:70%"></div>' +
+                        '<div class="pull-right"><button type="button" class="btn btn-theme02 minusButton"><i class="fa fa-minus"></i> 删除</button></div>' +
+                        '<div class="btn-group pull-right nav-right">' + 
+                            '<input type="hidden" name="need[]" value="' + need + '">'+
+                            '<button type="button" class="btn btn-theme04" id="need-btn">' + need_zh + '</button>'+
+                            '<button type="button" class="btn btn-theme04 dropdown-toggle" data-toggle="dropdown">'+
+                                '<span class="caret"></span>'+
+                                '<span class="sr-only"></span>'+
+                            '</button>'+
+                            '<ul class="dropdown-menu" role="menu">'+
+                                '<li><a class="a-need" data-id="1" href="#bottom"> 必填</a></li>'+
+                                '<li><a class="a-need" data-id="2" href="#bottom"> 选填</a></li>'+
+                            '</ul>'+
+                        '</div>'+
+                    '</div>';
+                $("#modifyModal #filesDiv").append(html)
+            }
+        }
+        $("#modifyModal").modal('show');
+    });
+    $(".deleteButton").click(function(){
+        $('#deleteModal input[name="id"]').val($(this).attr('data-id'));
+        $('#deleteModal').modal('show');
+    });
+    $("#submitDeleteForm").click(function(){
+        ajaxPost('/cases/flag/act/delete', $("#deleteForm").serialize());
+    });
+    $(".magicButton").click(function(){
+        $('#magicForm input[name="Flagid"]').val($(this).attr('data-id'));
+        $('#magicModal').modal('show');
+    });
+    $('#magicSubmitForm').click(function(){
+        ajaxPost('/cases/flag/act/modify', $("#magicForm").serialize());
+    });
+
+});
+</script>
+</body>
+</html>

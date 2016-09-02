@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+   <?php require $viewPath . "common/head.phtml"?>
+<body>
+<section id="container" >
+    <?php require $viewPath . "common/nav.phtml"?>
+    <?php require $viewPath . "common/sidebar.phtml"?>
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row mt">
+                <div class="col-md-12">
+                    <div class="content-panel">
+                        <h4><i class="fa fa-angle-right"></i> 用户列表</h4>
+                        <hr>
+                        <div class="form-inline">
+                        <div class="btn-group pull-right nav-right">
+                            <button type="button" class="btn btn-theme02"> 角色</button>
+                            <button type="button" class="btn btn-theme02 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php foreach ($roles as $v) {?>
+                                <li><a href="/sys/user/act/list?roleid=<?php echo $v['id']?>"><?php echo $v['name'];?></a></li>
+                                <?php }?>
+                                <li class="divider"></li>
+                                <li><a href="/sys/user"> 清除</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group pull-right">
+                            <button type="button" class="btn btn-theme02"> 职位</button>
+                            <button type="button" class="btn btn-theme02 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php foreach ($duties as $v) {?>
+                                <li><a href="/sys/user/act/list?duties=<?php echo $v['id']?>"><?php echo $v['name'];?></a></li>
+                                <?php }?>
+                                <li class="divider"></li>
+                                <li><a href="/sys/user"> 清除</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group pull-right">
+                            <button type="button" class="btn btn-theme02"> 状态</button>
+                            <button type="button" class="btn btn-theme02 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php foreach (Util_Tools::getStatus('user') as $k=>$v) {?>
+                                <li><a href="/sys/user/act/list?status=<?php echo $k?>"><?php echo $v;?></a></li>
+                                <?php }?>
+                                <li><a href="/sys/user/act/list"> 无</a></li>
+                            </ul>
+                        </div>
+                        <div class="pull-right">
+                            <input type="text" name="search" placeholder="姓名/邮箱/手机号" autocomplete="off" class="form-control placeholder-no-fix nav-right">
+                            <button class="btn btn-primary pull-right nav-right" id="searchButton">  搜索</button>
+                        </div>
+                        <div class="pull-right nav-right">
+                        <?php if (isset($currentMenu[500201])) {?>
+                            <button data-toggle="modal" href="#myModal" class="btn btn-primary">  添加 </button>
+                        <?php }?>
+                        </div>
+                        </div>
+                        <hr style="margin-top:70px">
+                        <table class="table table-striped table-advance table-hover">
+                        <thead>
+                            <tr>
+                                <th data-field="name"><i class="fa fa-bookmark"></i> 姓名 </th>
+                                <th data-field="duties"><i class="fa fa-user-secret"></i> 职位</th>
+                                <th data-field="role"><i class="fa fa-flag"></i> 角色</th>
+                                <th data-field="mobile"><i class="fa fa-phone"></i> 电话</th>
+                                <th data-field="email"><i class="fa fa-envelope"></i> 邮箱</th>
+                                <th data-field="operator"><i class="fa fa-user"></i> 添加人</th>
+                                <th data-field="created"><i class="fa fa-clock-o"></i> 添加时间</th>
+                                <th data-field="status"><i class="fa fa-heart"></i> 状态</th>
+                                <th><i class="fa fa-cogs"> 操作</i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($result)){?>
+                                <tr>
+                                    <td colspan="9" style="text-align:center"> 没有找到数据</td>
+                                </tr>
+                            <?php } else {
+                                foreach ($result as $k=>$v) {?>
+                              <tr>
+                                <td><?php echo $v['name'];?></td>
+                                <td><?php echo $duties[$v['duties']]['name'];?></td>
+                                <td><?php echo $roles[$v['roleid']]['name'];?></td>
+                                <td><?php echo $v['mobile'];?></td>
+                                <td><?php echo $v['email'];?></td>
+                                <td><?php echo $operators[$v['operator']]['name'];?></td>
+                                <td><?php echo $v['created'];?></td>
+                                <td><?php echo Util_Tools::getStatus('user', $v['status']);?></td>
+                                <?php
+                                    $datas = $v;
+                                    $datas['status_zh'] = Util_Tools::getStatus('user', $v['status'], false);
+                                    $datas['role_zh'] = $roles[$v['roleid']]['name'];
+                                    $datas['duties_zh'] = $duties[$v['duties']]['name'];
+                                    $datas = json_encode($datas);
+                                ?>
+                                <td>
+                                    <button class="btn btn-primary btn-xs modifyButton" title="修改" datas='<?php echo $datas?>'><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-xs deleteButton" title="删除" data-id='<?php echo $v['id']?>'><i class="fa fa-trash-o "></i></button>
+                                </td>
+                              </tr>
+                            <?php }}?>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+    <?php require $viewPath . "common/footer.phtml"?>
+</section>
+<?php require $viewPath . "common/js.phtml"?>
+<?php if (isset($currentMenu[500103])) {?>
+<form class="form-horizontal style-form" id="modifyForm" onSubmit="return false;">
+    <div aria-hidden="true" aria-labelledby="modifyModalLabel" role="dialog" tabindex="-1" id="modifyModal" class="modal fade">
+    <input type="hidden" name="id">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">  修改用户 </h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <strong> 警告！</strong><span class="showMsg"></span>
+                    </div>
+                    <br />
+                    <div class="from-group form-inline">
+                        <input type="text" name="name" placeholder="姓名" autocomplete="off" class="form-control placeholder-no-fix">
+                        <input type="text" name="mobile" placeholder="电话" autocomplete="off" class="form-control placeholder-no-fix">
+                        <input type="text" name="email" placeholder="邮箱" autocomplete="off" class="form-control placeholder-no-fix">
+                    </div>
+                    <br />
+                    <br />
+                    <div class="from-group form-inline">
+                        <div class="btn-group">
+                            <input type="hidden" name="roleid" id="roleid">
+                            <button type="button" class="btn btn-theme03" id="role-btn">角色</button>
+                            <button type="button" class="btn btn-theme03 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php foreach ($roles as $v) {?>
+                                <li><a class="a-role" data-id="<?php echo $v['id']?>" href="#bottom"><?php echo $v['name'];?></a></li>
+                                <?php }?>
+                                <li class="divider"></li>
+                                <li><a class="a-role" data-id="-1" href="#bottom"> 无</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <input type="hidden" name="gender" id="gender">
+                            <button type="button" class="btn btn-theme03" id="gender-btn">性别</button>
+                            <button type="button" class="btn btn-theme03 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a class="a-gender" data-id="男" href="#bottom">男</a></li>
+                                <li><a class="a-gender" data-id="女" href="#bottom">女</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <input type="hidden" name="duties" id="duties">
+                            <button type="button" class="btn btn-theme03" id="duties-btn">职位</button>
+                            <button type="button" class="btn btn-theme03 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php foreach ($duties as $v) {?>
+                                <li><a class="a-duties" data-id="<?php echo $v['id']?>" href="#bottom"><?php echo $v['name'];?></a></li>
+                                <?php }?>
+                                <li class="divider"></li>
+                                <li><a class="a-duties" data-id="-1" href="#bottom"> 无</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <input type="hidden" name="status" id="status">
+                            <button type="button" class="btn btn-theme03" id="status-btn">状态</button>
+                            <button type="button" class="btn btn-theme03 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php foreach (Util_Tools::getStatus('user') as $k=>$v) {?>
+                                <li><a class="a-status" data-id="<?php echo $k?>" href="#bottom"><?php echo $v;?></a></li>
+                                <?php }?>
+                                <li class="divider"></li>
+                                <li><a class="a-status" data-id="-1" href="#bottom"> 无</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default">关闭</button>
+                    <button class="btn btn-theme" id="modifySubmitForm">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<?php }?>
+
+<?php if (isset($currentMenu[500102])) {?>
+<form class="form-horizontal style-form" id="form" onSubmit="return false;">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">  添加用户 </h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <strong> 警告！</strong><span class="showMsg"></span>
+                    </div>
+                    <br />
+                    <div class="from-group form-inline">
+                        <input type="text" name="name" placeholder="姓名" autocomplete="off" class="form-control placeholder-no-fix">
+                        <input type="text" name="mobile" placeholder="电话" autocomplete="off" class="form-control placeholder-no-fix">
+                        <input type="text" name="email" placeholder="邮箱" autocomplete="off" class="form-control placeholder-no-fix">
+                    </div>
+                    <br />
+                    <br />
+                    <div class="from-group form-inline">
+                        <div class="btn-group">
+                            <input type="hidden" name="roleid" id="roleid">
+                            <button type="button" class="btn btn-theme03" id="role-btn">角色</button>
+                            <button type="button" class="btn btn-theme03 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php foreach ($roles as $v) {?>
+                                <li><a class="a-role" data-id="<?php echo $v['id']?>" href="#bottom"><?php echo $v['name'];?></a></li>
+                                <?php }?>
+                                <li class="divider"></li>
+                                <li><a class="a-role" data-id="-1" href="#bottom"> 无</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <input type="hidden" name="gender" id="gender">
+                            <button type="button" class="btn btn-theme03" id="gender-btn">性别</button>
+                            <button type="button" class="btn btn-theme03 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a class="a-gender" data-id="男" href="#bottom">男</a></li>
+                                <li><a class="a-gender" data-id="女" href="#bottom">女</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <input type="hidden" name="duties" id="duties">
+                            <button type="button" class="btn btn-theme03" id="duties-btn">职位</button>
+                            <button type="button" class="btn btn-theme03 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php foreach ($duties as $v) {?>
+                                <li><a class="a-duties" data-id="<?php echo $v['id']?>" href="#bottom"><?php echo $v['name'];?></a></li>
+                                <?php }?>
+                                <li class="divider"></li>
+                                <li><a class="a-duties" data-id="-1" href="#bottom"> 无</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <input type="hidden" name="status" id="status">
+                            <button type="button" class="btn btn-theme03" id="status-btn">状态</button>
+                            <button type="button" class="btn btn-theme03 dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <?php foreach (Util_Tools::getStatus('user') as $k=>$v) {?>
+                                <li><a class="a-status" data-id="<?php echo $k?>" href="#bottom"><?php echo $v;?></a></li>
+                                <?php }?>
+                                <li class="divider"></li>
+                                <li><a class="a-status" data-id="-1" href="#bottom"> 无</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default">关闭</button>
+                    <button class="btn btn-theme" id="submitForm">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<?php }?>
+<?php if (isset($currentMenu[500104])) {?>
+<form class="form-horizontal style-form" id="deleteForm" onSubmit="return false;">
+<div aria-hidden="true" aria-labelledby="deleteModalLabel" role="dialog" tabindex="-1" id="deleteModal" class="modal fade">
+<input type="hidden" name="id">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">  删除用户 </h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <strong> 警告： </strong><span class="showMsg"></span>
+                </div>
+                <div class="center">
+                    确认要删除该用户吗？
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default">取消</button>
+                <button class="btn btn-theme" id="submitDeleteForm">确认</button>
+           </div>
+        </div>
+    </div>
+</div>
+</form>
+<?php }?>
+<div aria-hidden="true" aria-labelledby="showPassModalLabel" role="dialog" tabindex="-1" id="showPassModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">  用户随机密码 </h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <strong> 密码： </strong><span id="showPassMsg"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" id="showPassButton">关闭</button>
+           </div>
+        </div>
+    </div>
+</div>
+<div aria-hidden="true" aria-labelledby="noticeModalLabel" role="dialog" tabindex="-1" id="noticeModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">  提示 </h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning show">
+                    <span id="noticeMsg"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" id="showPassButton">关闭</button>
+           </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/public/js/base.js"></script>
+<script>
+function onComplete(result){
+    if (result.status != 200) {
+        $('.alert-warning').show();
+        $('.showMsg').html(result.msg);
+    } else {
+        if (result.data != "") {
+            $('#showPassMsg').html(result.data);
+            $('#myModal').modal('hide');
+            $('#showPassModal').modal('show');
+            return true;
+        }
+        location.href = "/sys/user";
+    }
+}
+$(document).ready(function(){
+    $("#searchButton").click(function(){
+        var value = $("input[name='search']").val();
+        if (value == "") {
+            $("#noticeMsg").html("搜索内容不能为空");
+            $('#noticeModal').modal('show');
+            return false;
+        }
+        location.href = "/sys/user/act/list?search=" + value;
+
+    });
+    $('#submitForm').click(function(){
+        ajaxPost('/sys/user/act/create', $("#form").serialize());
+    });
+    $('#modifySubmitForm').click(function(){
+        ajaxPost('/sys/user/act/modify', $("#modifyForm").serialize());
+    });
+    $("#myModal .a-role").click(function(){
+        var value = $(this).html();
+        var roleid = $(this).attr('data-id');
+        $('#myModal #role-btn').html(value);
+        $('#myModal #roleid').val(roleid);
+    });
+    $("#modifyModal .a-role").click(function(){
+        var value = $(this).html();
+        var roleid = $(this).attr('data-id');
+        $('#modifyModal #role-btn').html(value);
+        $('#modifyModal #roleid').val(roleid);
+    });
+    $("#modifyModal .a-gender").click(function(){
+        var value = $(this).html();
+        var gender = $(this).attr('data-id');
+        $('#modifyModal #gender-btn').html(value);
+        $('#modifyModal #gender').val(gender);
+    });
+    $("#modifyModal .a-duties").click(function(){
+        var value = $(this).html();
+        var duties= $(this).attr('data-id');
+        $('#modifyModal #duties-btn').html(value);
+        $('#modifyModal #duties').val(duties);
+    });
+    $("#modifyModal .a-status").click(function(){
+        var value = $(this).html();
+        var status= $(this).attr('data-id');
+        $('#modifyModal #status-btn').html(value);
+        $('#modifyModal #status').val(status);
+    });
+
+    $("#myModal .a-gender").click(function(){
+        var value = $(this).html();
+        var gender = $(this).attr('data-id');
+        $('#myModal #gender-btn').html(value);
+        $('#myModal #gender').val(gender);
+    });
+    $("#myModal .a-duties").click(function(){
+        var value = $(this).html();
+        var duties= $(this).attr('data-id');
+        $('#myModal #duties-btn').html(value);
+        $('#myModal #duties').val(duties);
+    });
+    $("#myModal .a-status").click(function(){
+        var value = $(this).html();
+        var status= $(this).attr('data-id');
+        $('#myModal #status-btn').html(value);
+        $('#myModal #status').val(status);
+    });
+    $(".deleteButton").click(function(){
+        $('#deleteModal input[name="id"]').val($(this).attr('data-id'));
+        $('#deleteModal').modal('show');
+    });
+    $("#submitDeleteForm").click(function(){
+        ajaxPost('/sys/user/act/delete', $("#deleteForm").serialize());
+    });
+    $(".modifyButton").click(function(){
+        var datas = $.parseJSON($(this).attr('datas'));
+        $('#modifyModal input[name="id"]').val(datas.id);
+        $('#modifyModal input[name="name"]').val(datas.name);
+        $('#modifyModal input[name="mobile"]').val(datas.mobile);
+        $('#modifyModal input[name="email"]').val(datas.email);
+        if (datas.roleid != "" && datas.role_zh != null) {
+            $('#modifyModal input[name="roleid"]').val(datas.roleid);
+            $('#modifyModal #role-btn').html(datas.role_zh);
+        }
+        if (datas.duties != "" && datas.duties_zh != null) {
+            $('#modifyModal input[name="duties"]').val(datas.duties);
+            $('#modifyModal #duties-btn').html(datas.duties_zh);
+        }
+        if (datas.gender != null && datas.gender != '') {
+            $('#modifyModal input[name="gender"]').val(datas.gender);
+            $('#modifyModal #gender-btn').html(datas.gender);
+        }
+        $('#modifyModal input[name="status"]').val(datas.status);
+        $('#modifyModal #status-btn').html(datas.status_zh);
+
+        $('#modifyModal').modal('show');
+    });
+
+    $('#showPassButton').click(function(){
+        location.href = "/sys/user";
+    });
+});
+</script>
+</body>
+</html>

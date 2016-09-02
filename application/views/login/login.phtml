@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 登录系统 </title>
+    <!-- Bootstrap core CSS -->
+    <link href="/public/css/bootstrap.css" rel="stylesheet">
+    <!--external css-->
+    <link href="/public/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="/public/css/style.css" rel="stylesheet">
+    <link href="/public/css/style-responsive.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div id="login-page">
+    <div class="container">
+        <form class="form-login" id="form" onSubmit="return false;">
+            <h2 class="form-login-heading"> 马上登录 </h2>
+            <div class="login-wrap from-group">
+                <div class="alert alert-warning">
+                    <strong> 警告！</strong><span id="showMsg"></span>
+                </div>
+                <div class="" id="showMsg"></div>
+                <br />
+                <div class="form-group">
+                    <input type="text" name="mobile" class="form-control" placeholder="手机号" autofocus>
+                </div>
+                <br />
+                <div class="form-group">
+                    <input type="password" name="passwd" class="form-control" placeholder="密码">
+                </div>
+                <br />
+                <div class="form-group form-inline">
+                    <input type="text" class="form-control" name="captcha" placeholder="验证码" />
+                    <label class="control-label pull-right" id="captchaOperation">
+                        <img title="点击刷新" id='captchaImg' src="/util/captcha" align="absbottom"></img>
+                    </label>
+                </div>
+                <br />
+                <label class="checkbox">
+                    <span class="pull-right">
+                        <a data-toggle="modal" href="#myModal"> 忘记密码?</a>
+                    </span>
+                </label>
+                <button class="btn btn-theme btn-block" id="submitForm"><i class="fa fa-lock"></i> 登录 </button>
+                <hr>
+                <div class="login-social-link centered">
+                </div>
+                <div class="registration">
+                </div>
+            </div>
+        </form>
+        <!-- Modal -->
+        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"> 忘记密码? </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p> 请找系统管理员 徐大状 重置密码,联系电话110转119. </p>
+                        <!--input type="text" name="email" placeholder="Email" autocomplete="off" class="form-control placeholder-no-fix"-->
+                    </div>
+                    <div class="modal-footer">
+                        <!--button data-dismiss="modal" class="btn btn-default" type="button">Cancel</button-->
+                        <button class="btn btn-theme" data-dismiss="modal" type="button">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+    </div>
+</div>
+<script src="/public/js/jquery.js"></script>
+<script src="/public/js/bootstrap.min.js"></script>
+<!--BACKSTRETCH-->
+<!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+<script type="text/javascript" src="/public/js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="/public/js/base.js"></script>
+<script>
+function onComplete(result){
+    if (result.status != 200) {
+        $('#showMsg').html(result.msg);
+        $('#captchaImg').attr('src','/util/captcha?'+Math.random());
+    } else{
+        location.href = "/";
+    }
+}
+$(document).ready(function(){
+    $.backstretch("/public/img/login-bg.jpg", {speed: 500});
+    $('#submitForm').click(function(){
+        ajaxPost('/login/loginAjax', $("#form").serialize());
+    });
+    $('#captchaImg').click(function(){
+        $('#captchaImg').attr('src','/util/captcha?'+Math.random());
+    });
+})
+</script>
+</body>
+</html>

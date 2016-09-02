@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'Ruda';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ruda'), url(../fonts/Y3cEAPkpwxcFpAfTchaPEA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Ruda';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Ruda Bold'), local('Ruda-Bold'), url(../fonts/TpnmM05ufnzGD6rtSKhHyQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Ruda';
+  font-style: normal;
+  font-weight: 900;
+  src: local('Ruda Black'), local('Ruda-Black'), url(../fonts/TLhorDnGfDh-0-EwC21hJw.ttf) format('truetype');
+}

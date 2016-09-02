@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+   <?php require $viewPath . "common/head.phtml"?>
+<body>
+<section id="container" >
+    <?php require $viewPath . "common/nav.phtml"?>
+    <?php require $viewPath . "common/sidebar.phtml"?>
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row mt">
+                <div class="col-lg-12">
+                    <div class="form-panel">
+                    <h4>
+                        <i class="fa fa-angle-right"></i> 修改密码
+                    </h4>
+                    <hr>
+                    <div class="alert alert-warning">
+                        <strong> 警告！</strong><span class="showMsg"></span>
+                    </div>
+                    <form class="form-horizontal style-form" id="modifyForm" onsubmit="return false;">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">旧密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" name="oldpass" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">新密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" name="newpass" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">重复输入</label>
+                            <div class="col-sm-10">
+                                <input type="password" name="renewpass" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group centered"> 
+                            <button class="btn btn-primary" id="modifySubmitForm"> 修改</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </section>
+    <?php require $viewPath . "common/footer.phtml"?>
+</section>
+<?php require $viewPath . "common/js.phtml"?>
+<script type="text/javascript" src="/public/js/base.js"></script>
+<script>
+function onComplete(result){
+    if (result.status != 200) {
+        $('.alert-warning').show();
+        $('.showMsg').html(result.msg);
+    } else {
+        location.href = "/login/logout";
+    }
+}
+$(document).ready(function(){
+    $('.alert-warning').hide();
+    $('#modifySubmitForm').click(function(){
+        ajaxPost('/setting/re', $("#modifyForm").serialize());
+    });
+});
+</script>
+</body>
+</html>

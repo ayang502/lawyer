@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+   <?php require $viewPath . "common/head.phtml"?>
+<body>
+<section id="container" >
+    <?php require $viewPath . "common/nav.phtml"?>
+    <?php require $viewPath . "common/sidebar.phtml"?>
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row mt">
+                <div class="col-lg-12">
+                    <div class="form-panel">
+                    <h4><i class="fa fa-angle-right"></i> 案件信息</h4>
+                    <hr>
+                    <form class="form-horizontal style-form" onSubmit="return false" id="form">
+                    <div class="form-group">
+                       <label class="col-sm-1 control-label">名称</label>
+                       <div class="col-sm-10">
+                            <input type="text" name="title" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                       <label class="col-sm-1 control-label">委托人</label>
+                       <div class="col-sm-10">
+                            <input type="text" name="consignor" class="form-control holder-no-fix"  placeholder="姓名/企业名称" autocomplete="off" style="width:30%" >
+                            <input type="text" name="consignor_idcode" class="form-control place holder-no-fix"  placeholder="身份证" autocomplete="off" style="width:30%"  >
+                            <input type="text" name="consignor_regcode" class="form-control place holder-no-fix"  placeholder="企业登记号码" autocomplete="off" style="width:39%">
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                       <label class="col-sm-1 control-label">对方当事人</label>
+                       <div class="col-sm-10">
+                            <input type="text" name="party" class="form-control holder-no-fix"  placeholder="姓名/企业名称" autocomplete="off" style="width:30%" >
+                            <input type="text" name="party_idcode" class="form-control place holder-no-fix"  placeholder="身份证" autocomplete="off" style="width:30%"  >
+                            <input type="text" name="party_regcode" class="form-control place holder-no-fix"  placeholder="企业登记号码" autocomplete="off" style="width:39%">
+                        </div>
+                    </div>
+                    <div class="form-group form-inline">
+                       <label class="col-sm-1 control-label"> 第三人</label>
+                       <div class="col-sm-10">
+                            <input type="text" name="third" class="form-control holder-no-fix"  placeholder="姓名/企业名称" autocomplete="off" style="width:30%" >
+                            <input type="text" name="third_idcode" class="form-control place holder-no-fix"  placeholder="身份证" autocomplete="off" style="width:30%"  >
+                            <input type="text" name="third_regcode" class="form-control place holder-no-fix"  placeholder="企业登记号码" autocomplete="off" style="width:39%">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                       <label class="col-sm-1 control-label"> 指导律师</label>
+                       <div class="col-sm-10">
+                            <select name="guide_user" class="selectpicker show-tick" data-width="fit">
+                                <option value="-1">请选择</option>
+                                <?php foreach ($guideUser as $id=>$v) {?>
+                                <option value="<?php echo $id?>"><?php echo $v['name']?></option>
+                                <?php }?>
+                            </select>
+                       </div>
+                    </div>
+                    <div class="form-group">
+                       <label class="col-sm-1 control-label"> 经办律师</label>
+                       <div class="col-sm-10">
+                            <select name="handle_user" class="selectpicker show-tick" data-width="fit">
+                                <option value="-1">请选择</option>
+                                <?php foreach ($handleUser as $id=>$v) {?>
+                                <option value="<?php echo $id?>"><?php echo $v['name']?></option>
+                                <?php }?>
+                            </select>
+                       </div>
+                    </div>
+
+                    <div class="form-group">
+                       <label class="col-sm-1 control-label"> 种类</label>
+                       <div class="col-sm-10" id="cases_type">
+                            <select name="cases_typeid[]" class="selectpicker show-tick" data-width="fit">
+                                <option value="-1">请选择</option>
+                                <?php foreach ($ctypeList as $id=>$v) {?>
+                                <option value="<?php echo $id?>"><?php echo $v['name']?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                       <label class="col-sm-1 control-label"> 案由</label>
+                       <div class="col-sm-10">
+                            <textarea type="text" name="cases_reason" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                       <label class="col-sm-1 control-label"> 阶段</label>
+                       <div class="col-sm-10">
+                            <select name="cases_flag" class="selectpicker show-tick" data-width="fit">
+                                <option value="-1">请选择</option>
+                                <?php foreach ($flagList as $id=>$v) {?>
+                                <option value="<?php echo $id?>"><?php echo $v['name']?></option>
+                                <?php }?>
+                            </select>
+                       </div>
+                    </div>
+                    <div class="form-group centered">
+                        <button type="button" class="btn btn-theme03" id="nextButton">下一步</button>
+                    </div> 
+                    <!--div class="from-group btn-group btn-group-justified">
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-theme04" id="saveButton">保存</button>
+                          </div>
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-theme02" id="nextButton">下一步</button>
+                          </div>
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-theme03" id="submitButton">结束</button>
+                          </div>
+                        </div>
+                    </div--->
+                    </form>
+                </div>
+            </div>
+        </section>
+    </section>
+    <?php require $viewPath . "common/footer.phtml"?>
+</section>
+<?php require $viewPath . "common/js.phtml"?>
+<script type="text/javascript" src="/public/js/base.js"></script>
+<link rel="stylesheet" href="/public/js/bootstrap-select/bootstrap-select.min.css">
+<script src="/public/js/bootstrap-select/bootstrap-select.min.js"></script>
+<script src="/public/js/bootstrap-select/defaults-zh_CN.min.js"></script>
+<script>
+function onComplete(result) {
+    if (result.status == 200) {
+        if (result.data.type == "level" && result.data.list) {
+            var list = result.data.list;
+            var html = '<select name="cases_typeid[]" class="selectpicker show-tick" data-width="fit">' +
+                '<option value="-1">请选择</option>';
+            for (id in list) {
+                opt = '' + 
+                    '<option value="' + id + '">' + list[id].name + '</option>';
+                html = html + opt;
+            }
+            html = html + '</select>';
+            $("#cases_type").append(html)
+                $('.selectpicker').selectpicker();
+
+        }
+        if (result.data.type == 'save') {
+            location.href = "/cases/next/id/" + result.data.id;
+        }
+    }
+}
+$(document).ready(function(){
+    $('select[name="cases_typeid[]"]').live('change', function(e){
+        if ($(this).val() != '-1') {
+            ajaxPost('/cases/ctype/act/getList', {"parentid":$(this).val()}); 
+        }
+        $(this).parent().nextAll().remove()
+    });
+    $('.selectpicker').selectpicker();
+    $("#nextButton").click(function(){
+        ajaxPost('/cases/save', $("#form").serialize());
+    });
+});
+</script>
+</body>
+</html>
