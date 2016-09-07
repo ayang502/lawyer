@@ -5,7 +5,8 @@ class Util_Encode {
     function __construct ($iv=0) {
         $config = new Yaf_Config_Ini(dirname(__FILE__) . '/../../../conf/config.ini');
         self::$key = $config['encode']['key'];
-        self::$v = $iv;
+        $iv = strlen(self::$key);
+        self::$iv = $iv;
     }
     static public function encrypt($str) {
         $size = mcrypt_get_block_size(MCRYPT_DES, MCRYPT_MODE_CBC);

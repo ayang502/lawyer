@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
    <?php require $viewPath . "common/head.phtml"?>
+    <link href="/public/js/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="/public/js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <body>
 <section id="container" >
     <?php require $viewPath . "common/nav.phtml"?>
@@ -12,91 +14,61 @@
                 <div class="col-lg-12">
                     <div class="form-panel">
                     <h4><i class="fa fa-angle-right"></i> 案件信息</h4>
+                    <div class="alert alert-warning">
+                        <strong> 警告！</strong><span class="showMsg"></span>
+                    </div>
                     <hr>
-                    <form class="form-horizontal style-form" onSubmit="return false" id="form">
+                    <form class="form-horizontal style-form" onSubmit="return false" id="form" enctype="multipart/form-data">
+                    <input name="casesid" value="<?php echo $list['id']?>" type="hidden">
+                    <?php if (!empty($info['files'])) {?>
                     <div class="form-group">
-                       <label class="col-sm-1 control-label">名称</label>
+                        <label class="col-sm-1 control-label">相关文件</label>
+                        <div class="col-sm-10">
+                            <?php 
+                                $min = 0;
+                                foreach ($info['files'] as $v) {
+                                    if ($v['need'] == 1) {
+                                        $class = "text-danger";
+                                        $min++;
+                                    } else {
+                                        $class = "text-info";
+                                    }
+                            ?>
+                            <label class="control-label <?php echo $class?>"><?php echo $v['name'];?>(<?php echo $v['need'] == 1 ? "必填" : "选填"?>)</label>
+                            <br>
+                            <?php }?>
+                            <input id="file-all" type="file" multiple class="file" name="files" data-overwrite-initial="false" data-min-file-count="<?php echo $min;?>">
+                        </div>
+                    </div>
+                    <?php }?>
+                    <div class="form-group form-inline">
+                       <label class="col-sm-1 control-label"> 时间计划 </label>
                        <div class="col-sm-10">
-                            <input type="text" name="title" class="form-control">
+                            <div id="timeline">
+                                <input type="text" name="times[]" class="form-control place holder-no-fix"  placeholder="事件说明" autocomplete="off" style="width:39%">
+                                <div class="input-group date form_datetime col-md-5" data-link-field="dtp_input1">
+                                    <input class="form-control" size="16" type="text" value="" readonly>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+	                                <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <input type="hidden" id="dtp_input1" value="" name="date[]"/><br/><br/>
+                            </div>
+                            <button type="button" class="btn btn-theme04" id="addButton">增加</button>
                         </div>
                     </div>
                     <div class="form-group form-inline">
-                       <label class="col-sm-1 control-label">委托人</label>
-                       <div class="col-sm-10">
-                            <input type="text" name="consignor" class="form-control holder-no-fix"  placeholder="姓名/企业名称" autocomplete="off" style="width:30%" >
-                            <input type="text" name="consignor_idcode" class="form-control place holder-no-fix"  placeholder="身份证" autocomplete="off" style="width:30%"  >
-                            <input type="text" name="consignor_regcode" class="form-control place holder-no-fix"  placeholder="企业登记号码" autocomplete="off" style="width:39%">
+                       <label class="col-sm-2 control-label">案件受理机关</label>
+                       <div class="col-sm-4">
+                            <input type="text" name="operator[com]" class="form-control holder-no-fix"  placeholder="姓名/企业名称" autocomplete="off">
                         </div>
-                    </div>
-                    <div class="form-group form-inline">
-                       <label class="col-sm-1 control-label">对方当事人</label>
-                       <div class="col-sm-10">
-                            <input type="text" name="party" class="form-control holder-no-fix"  placeholder="姓名/企业名称" autocomplete="off" style="width:30%" >
-                            <input type="text" name="party_idcode" class="form-control place holder-no-fix"  placeholder="身份证" autocomplete="off" style="width:30%"  >
-                            <input type="text" name="party_regcode" class="form-control place holder-no-fix"  placeholder="企业登记号码" autocomplete="off" style="width:39%">
+                       <label class="col-sm-2 control-label">案件经办人员</label>
+                       <div class="col-sm-4">
+                            <input type="text" name="operator[peo]" class="form-control holder-no-fix"  placeholder="姓名/企业名称" autocomplete="off">
                         </div>
-                    </div>
-                    <div class="form-group form-inline">
-                       <label class="col-sm-1 control-label"> 第三人</label>
-                       <div class="col-sm-10">
-                            <input type="text" name="third" class="form-control holder-no-fix"  placeholder="姓名/企业名称" autocomplete="off" style="width:30%" >
-                            <input type="text" name="third_idcode" class="form-control place holder-no-fix"  placeholder="身份证" autocomplete="off" style="width:30%"  >
-                            <input type="text" name="third_regcode" class="form-control place holder-no-fix"  placeholder="企业登记号码" autocomplete="off" style="width:39%">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                       <label class="col-sm-1 control-label"> 指导律师</label>
-                       <div class="col-sm-10">
-                            <select name="guide_user" class="selectpicker show-tick" data-width="fit">
-                                <option value="-1">请选择</option>
-                                <?php foreach ($guideUser as $id=>$v) {?>
-                                <option value="<?php echo $id?>"><?php echo $v['name']?></option>
-                                <?php }?>
-                            </select>
-                       </div>
-                    </div>
-                    <div class="form-group">
-                       <label class="col-sm-1 control-label"> 经办律师</label>
-                       <div class="col-sm-10">
-                            <select name="handle_user" class="selectpicker show-tick" data-width="fit">
-                                <option value="-1">请选择</option>
-                                <?php foreach ($handleUser as $id=>$v) {?>
-                                <option value="<?php echo $id?>"><?php echo $v['name']?></option>
-                                <?php }?>
-                            </select>
-                       </div>
                     </div>
 
-                    <div class="form-group">
-                       <label class="col-sm-1 control-label"> 种类</label>
-                       <div class="col-sm-10" id="cases_type">
-                            <select name="cases_typeid[]" class="selectpicker show-tick" data-width="fit">
-                                <option value="-1">请选择</option>
-                                <?php foreach ($ctypeList as $id=>$v) {?>
-                                <option value="<?php echo $id?>"><?php echo $v['name']?></option>
-                                <?php }?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                       <label class="col-sm-1 control-label"> 案由</label>
-                       <div class="col-sm-10">
-                            <textarea type="text" name="cases_reason" class="form-control"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                       <label class="col-sm-1 control-label"> 阶段</label>
-                       <div class="col-sm-10">
-                            <select name="cases_flag" class="selectpicker show-tick" data-width="fit">
-                                <option value="-1">请选择</option>
-                                <?php foreach ($flagList as $id=>$v) {?>
-                                <option value="<?php echo $id?>"><?php echo $v['name']?></option>
-                                <?php }?>
-                            </select>
-                       </div>
-                    </div>
                     <div class="form-group centered">
-                        <button type="button" class="btn btn-theme03" id="nextButton">下一步</button>
+                        <button type="button" class="btn btn-theme03" id="saveButton">保存</button>
                     </div> 
                     <!--div class="from-group btn-group btn-group-justified">
                           <div class="btn-group">
@@ -117,43 +89,85 @@
     </section>
     <?php require $viewPath . "common/footer.phtml"?>
 </section>
-<?php require $viewPath . "common/js.phtml"?>
-<script type="text/javascript" src="/public/js/base.js"></script>
-<link rel="stylesheet" href="/public/js/bootstrap-select/bootstrap-select.min.css">
-<script src="/public/js/bootstrap-select/bootstrap-select.min.js"></script>
-<script src="/public/js/bootstrap-select/defaults-zh_CN.min.js"></script>
-<script>
-function onComplete(result) {
-    if (result.status == 200) {
-        if (result.data.type == "level" && result.data.list) {
-            var list = result.data.list;
-            var html = '<select name="cases_typeid[]" class="selectpicker show-tick" data-width="fit">' +
-                '<option value="-1">请选择</option>';
-            for (id in list) {
-                opt = '' + 
-                    '<option value="' + id + '">' + list[id].name + '</option>';
-                html = html + opt;
-            }
-            html = html + '</select>';
-            $("#cases_type").append(html)
-                $('.selectpicker').selectpicker();
 
-        }
-        if (result.data.type == 'save') {
-            location.href = "/cases/next/id/" + result.data.id;
-        }
+<?php require $viewPath . "common/js.phtml"?>
+<script src="/public/js/bootstrap-fileinput/js/fileinput.min.js" type="text/javascript" charset="UTF-8"></script>
+<script src="/public/js/bootstrap-fileinput/js/locales/zh.js" type="text/javascript" charset="UTF-8"></script>
+<script type="text/javascript" src="/public/js/base.js"></script>
+<script type="text/javascript" src="/public/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/public/js/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script>
+
+function onComplete(result) {
+    if (result.status != 200) {
+        $('.alert-warning').show();
+        $('.showMsg').html(result.msg);
+    } else {
+        location.href="/cases/list"
     }
 }
+$("#file-all").fileinput({
+    language: 'zh',
+    uploadUrl: '/cases/upload', 
+    uploadExtraData: {id: <?php echo $list['id']?>, f: <?php echo $list['cases_flag']?>},
+    //allowedFileExtensions : ['jpg', 'png','gif'],
+    overwriteInitial: false,
+    //maxFileSize: 1000,
+    maxFilesNum: 10,
+    //allowedFileTypes: ['image', 'video', 'flash'],
+    fileType: "any",
+    previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+    slugCallback: function(filename) {
+        return filename.replace('(', '_').replace(']', '_');
+    }
+});
+var files = [];
+$("#file-all").on("fileuploaded", function(event, data, previewId, index) {
+    var response = data.response;
+    var filename = response.data;
+    files.push(filename);
+});
+$('.form_datetime').datetimepicker({
+    language: 'zh-CN',
+    weekStart: 1,
+    todayBtn:  1,
+	autoclose: 1,
+	todayHighlight: 1,
+	startView: 2,
+	forceParse: 0,
+    showMeridian: 1,
+    format: 'yyyy-mm-dd hh:ii'
+});
 $(document).ready(function(){
-    $('select[name="cases_typeid[]"]').live('change', function(e){
-        if ($(this).val() != '-1') {
-            ajaxPost('/cases/ctype/act/getList', {"parentid":$(this).val()}); 
-        }
-        $(this).parent().nextAll().remove()
+    $("#saveButton").click(function(){
+        var jsonData = $("#form").serializeArray();
+        var len = jsonData.length
+        jsonData[len+1] = {'name':'files', 'value':files};
+        ajaxPost('/cases/submit', jsonData);
     });
-    $('.selectpicker').selectpicker();
-    $("#nextButton").click(function(){
-        ajaxPost('/cases/save', $("#form").serialize());
+    $('.form_datetime').live('click', function(){
+        $('.form_datetime').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+	        autoclose: 1,
+	        todayHighlight: 1,
+	        startView: 2,
+	        forceParse: 0,
+            showMeridian: 1,
+            format: 'yyyy-mm-dd hh:ii'
+        });
+    });
+    $("#addButton").click(function(){
+        var id = $("#timeline").children('div').length + 1;
+        var html = '<input type="text" name="times[]" class="form-control place holder-no-fix"  placeholder="事件说明" autocomplete="off" style="width:39%">'+
+                   '<div class="input-group date form_datetime col-md-5" data-link-field="dt'+id+'">'+
+                        '<input class="form-control" size="16" type="text" value="" readonly>'+
+                        '<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>'+
+	                    '<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>'+
+                   '</div>'+
+                   '<input type="hidden" id="dt' + id +'" value="" name="date[]" /><br/><br/>'
+        $("#timeline").append(html); 
     });
 });
 </script>

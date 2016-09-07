@@ -20,7 +20,7 @@ class Biz_Flag {
                 $file[] = array('name'=>$v, 'need'=>$need[$k]);
             }
         }
-        $data['files'] = json_encode($file);
+        $data['files'] = json_encode($filem, JSON_UNESCAPED_UNICODE);
         $Flagid = $this->objFlagModel->insert($data);
         return $Flagid;
     }
@@ -39,7 +39,7 @@ class Biz_Flag {
                     $file[] = array('name'=>$v, 'need'=>$need[$k]);
                 }
             }
-            $data['files'] = json_encode($file);
+            $data['files'] = json_encode($file, JSON_UNESCAPED_UNICODE);
         }
         if (!empty($status)) {
             $data['status'] = $status;

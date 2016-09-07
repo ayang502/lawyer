@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+   <?php require $viewPath . "common/head.phtml"?>
+<body>
+<section id="container" >
+    <?php require $viewPath . "common/nav.phtml"?>
+    <?php require $viewPath . "common/sidebar.phtml"?>
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row mt">
+                <div class="col-lg-12">
+                    <div class="form-panel">
+                    <h4><i class="fa fa-angle-right"></i> 案件基本信息</h4>
+                    <hr>
+                    <form class="form-horizontal style-form" onSubmit="return false" id="form">
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">案号</label>
+                        <label class="control-label"><?php echo $result['title'];?></label>
+                    </div>
+                    <div class="form-group form-inline">
+                        <label class="col-sm-1 control-label">委托人</label>
+                        <label class="col-sm-3 control-label"><?php echo $result['consignor'];?></label>
+                        <?php if (isset($result['consignor_regcode']) && !empty($result['consignor_regcode'])) {?>
+                        <label class="col-sm-1 control-label">企业登记号码</label>
+                        <label class="col-sm-3 control-label"><?php echo $result['consignor_regcode'];?></label>
+                        <?php }?>
+                        <?php if (isset($result['consignor_idcode']) && !empty($result['consignor_idcode'])) {?>
+                        <label class="col-sm-1 control-label">身份证</label>
+                        <label class="col-sm-3 control-label"><?php echo $result['consignor_idcode'];?></label>
+                        <?php }?>
+                    </div>
+                    <div class="form-group form-inline">
+                        <label class="col-sm-1 control-label">对方当事人</label>
+                        <label class="col-sm-3 control-label"><?php echo $result['party'];?></label>
+                        <?php if (isset($result['party_regcode']) && !empty($result['party_regcode'])) {?>
+                        <label class="col-sm-1 control-label">企业登记号码</label>
+                        <label class="col-sm-3 control-label"><?php echo $result['party_regcode'];?></label>
+                        <?php }?>
+                        <?php if (isset($result['party_idcode']) && !empty($result['party_idcode'])) {?>
+                        <label class="col-sm-1 control-label">身份证</label>
+                        <label class="col-sm-3 control-label"><?php echo $result['party_idcode'];?></label>
+                        <?php }?>
+                    </div>
+                    <div class="form-group form-inline">
+                        <label class="col-sm-1 control-label"> 第三人</label>
+                        <label class="col-sm-3 control-label"><?php echo $result['third'];?></label>
+                        <?php if (isset($result['third_regcode']) && !empty($result['third_regcode'])) {?>
+                        <label class="col-sm-1 control-label">企业登记号码</label>
+                        <label class="col-sm-3 control-label"><?php echo $result['third_regcode'];?></label>
+                        <?php }?>
+                        <?php if (isset($result['third_idcode']) && !empty($result['third_idcode'])) {?>
+                        <label class="col-sm-1 control-label">身份证</label>
+                        <label class="col-sm-3 control-label"><?php echo $result['third_idcode'];?></label>
+                        <?php }?>
+                    </div>
+                    <div class="form-group">
+                       <label class="col-sm-1 control-label"> 指导律师</label>
+                       <label class="col-sm-3 control-label"><?php echo $users[$result['guide_user']]['name'];?></label>
+                       <label class="col-sm-1 control-label">经办律师</label>
+                       <label class="col-sm-3 control-label"><?php echo $users[$result['handle_user']]['name'];?></label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label"> 种类</label>
+                        <label class="col-sm-3 control-label"><?php foreach ($result['type'] as $type){echo $types[$type]['name'];echo "--";}?></label>
+                        <label class="col-sm-1 control-label"> 案由</label>
+                        <label class="col-sm-3 control-label"><?php echo $result["cases_reason"]?></label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label"> 阶段</label>
+                        <div class="col-sm-11">
+                            <table class="table table-bordered"> 
+                            <thead> 
+                            <tr> 
+                                <th>阶段</th> 
+                                <th>文件</th> 
+                                <th>相关人员</th> 
+                                <th>时间计划</th> 
+                            </tr> 
+                            </thead> 
+                            <tbody> 
+                            <tr> 
+                                <td><?php echo $flag[$extra['cases_flag']]['name']?></td>
+                                <td><?php echo $extra['files'];?></td>
+                                <td><?php echo $extra['operator']['com']; echo $v['operator']['peo']?></td> 
+                                <td>
+                                <?php 
+                                foreach ($extra['timeline'] as $v) {
+                                    echo $v['name'];
+                                    echo $v['time'];
+                                }
+                                ?>
+                                </td> 
+                            </tr> 
+                            </tbody> 
+                            </table>
+                            
+                        </div>
+                    </div>
+                    <div class="form-group centered">
+                        <button type="button" class="btn btn-theme03" id="nextButton">下一步</button>
+                    </div> 
+                    </form>
+                </div>
+            </div>
+        </section>
+    </section>
+    <?php require $viewPath . "common/footer.phtml"?>
+</section>
+</script>
+</body>
+</html>

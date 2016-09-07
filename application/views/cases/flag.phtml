@@ -77,10 +77,10 @@
                     </div>
                     <input type="text" name="name" placeholder="阶段名称" autocomplete="off" class="placeholder-no-fix form-control">
                     <hr>
-                    <div id="filesDiv">
-                        <div class="fromm-inline">
+                    <div id="filesDiv" class="from-inline">
+                        <div>
                             <div>
-                            <input type="text" name="files[]" placeholder="产出文件名称" autocomplete="off" class="placeholder-no-fix pull-left form-control" style="width:70%">
+                            <input type="text" name="files[]" placeholder="产出文件名称" autocomplete="off" class="placeholder-no-fix pull-left form-control" style="width:60%">
                             </div>
                             <div class="pull-right">
                             <button type="button" class="btn btn-theme02 minusButton"><i class="fa fa-minus"></i> 删除</button>
@@ -100,6 +100,8 @@
                             
                         </div>
                     </div>
+                    <br>
+                    <br>
                     <div>
                         <button type="button" class="btn btn-theme02 addButton"><i class="fa fa-plus"></i> 增加</button>
                     </div>
@@ -129,7 +131,7 @@
                     </div>
                     <input type="text" name="name" placeholder="阶段名称" autocomplete="off" class="placeholder-no-fix form-control">
                     <hr>
-                    <div id="filesDiv">
+                    <div id="filesDiv" class="form-inline">
                     </div>
                     <div>
                         <button type="button" class="btn btn-theme02 addButton"><i class="fa fa-plus"></i> 增加</button>
@@ -296,9 +298,9 @@ $(document).ready(function(){
                 } else {
                     need_zh = '选填'
                 }
-                var html = '<div class="form-inline"><div>'+
+                var html = '<div><div>'+
                     '<input type="text" value="' + name +
-                    '" name="files[]" placeholder="产出文件名称" autocomplete="off" class="form-control placeholder-no-fix pull-left" style="width:70%"></div>' +
+                    '" name="files[]" placeholder="产出文件名称" autocomplete="off" class="form-control placeholder-no-fix pull-left" style="width:60%"></div>' +
                         '<div class="pull-right"><button type="button" class="btn btn-theme02 minusButton"><i class="fa fa-minus"></i> 删除</button></div>' +
                         '<div class="btn-group pull-right nav-right">' + 
                             '<input type="hidden" name="need[]" value="' + need + '">'+

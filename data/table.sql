@@ -132,6 +132,9 @@ CREATE TABLE `cases_extra` (
     `cases_flag` int(10) unsigned NOT NULL COMMENT "案件阶段",
     `files` text COMMENT "案件相关文件",
     `operator` text COMMENT "受理机关/案件经办人员",
+    `timeline` text COMMENT "时间计划",
+    `created` int(10) unsigned NOT NULL default 1, 
+    `updated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `cases`;

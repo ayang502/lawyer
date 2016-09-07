@@ -5,7 +5,7 @@ class Biz_Cases {
     }
     public function getList($query = array()) {
         $list = $this->objCasesModel->fList($query);
-        return $list;
+        return Util_Tools::changArrKey($list, 'id');
     }
     public function create($data = array()) {
         if (empty($data)){
